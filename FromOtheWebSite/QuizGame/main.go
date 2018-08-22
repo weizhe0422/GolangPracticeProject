@@ -32,7 +32,7 @@ func main() {
 
 problemloop:
 	for i, p := range problems {
-		fmt.Printf("Problem #%d: %s = ", i+1, p.q)
+		fmt.Printf("Problem #%d: %s = ", i+1, p.)
 		answerCh := make(chan string)
 
 		go func() {
@@ -64,7 +64,7 @@ func parseLines(lines [][]string) []problem {
 			q: line[0],
 			a: strings.TrimSpace(line[1]),
 		}
-	}
+	}f
 
 	return ret
 }

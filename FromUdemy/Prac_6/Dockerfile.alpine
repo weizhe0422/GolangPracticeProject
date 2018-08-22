@@ -1,0 +1,15 @@
+LABEL maintainer="WeiZhe.Chang <weizhe.chang@gmail.com>" \
+  org.label-schema.name="WZ Practice"\
+  org.lable-schema.vendor="Wei-Zhe Chang"
+
+# build stage
+FROM golang:alpine AS build-env
+ADD . /src
+RUN cd /src && go build -o app
+
+# final stage
+FROM alpine
+WORKDIR /app
+COPY --from=build-env /src/app /app/
+HEALTHCHECK --interval=3s --timeout=30s --start-period=5s --retries=3 CMD [ "./app", "-ping" ]
+ENTRYPOINT ["./app"]
