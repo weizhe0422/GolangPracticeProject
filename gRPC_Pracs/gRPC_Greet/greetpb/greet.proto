@@ -1,0 +1,41 @@
+syntax="proto3";
+
+package gRPC_Greet;
+option go_package="greetpb";
+
+message Greeting{
+    string firstname=1;
+    string lastname=2;
+}
+
+message GreetRequest{
+    Greeting greeting=1;
+}
+
+message GreetResponse{
+    string result=1;
+}
+
+message GreetManyTimesRequest{
+    Greeting greeting=1;
+}
+
+message GreeetManyTimesResoinse{
+    string result=1;
+}
+
+message LongGreetRequest{
+    Greeting greeting=1;
+}
+
+message LongGreetResponse{
+    string result=1;
+}
+
+service GreetService{
+    rpc Greet(GreetRequest) returns (GreetResponse){};
+
+    rpc GretManyTimes(GreetManyTimesRequest) returns (stream GreeetManyTimesResoinse){};
+
+    rpc LongGreet(stream LongGreetRequest) returns (LongGreetResponse){};
+}

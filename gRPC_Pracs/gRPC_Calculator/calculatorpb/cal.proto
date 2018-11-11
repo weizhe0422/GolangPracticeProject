@@ -1,0 +1,27 @@
+syntax="proto3";
+
+package gRPC_Calculator;
+option go_package="calculatorpb";
+
+message addReauest{
+    int32 firstNum=1;
+    int32 secondNum=2;
+}
+
+message calResult{
+    int32 calresult=1;
+}
+
+message AvgRequest{
+    int32 number=1;
+}
+
+message avgResult{
+    double calResule=1;
+}
+
+service AddService{
+    rpc ADD(addReauest) returns (calResult){};
+
+    rpc AVG(stream AvgRequest) returns (avgResult){};
+}
