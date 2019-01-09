@@ -1,0 +1,7 @@
+{
+  "apiSvrPrt":8070,
+  "apiSvrReadTimeOut":5000,
+  "apiSvrWriteTimeOut":5000,
+  "etcdEndPoints":["localhost:2379"],
+  "etcdDDialTimeOut":5000
+}
