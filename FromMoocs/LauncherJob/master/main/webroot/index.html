@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Launcher 設定頁面</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <!--Page Head-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1>管理後台<small>Golan分布式Cronjob</small></h1>
+                </div>
+            </div>
+        </div>
+
+        <!--功能按鈕-->
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary">新建任務</button>
+            </div>
+        </div>
+
+        <!--任務列表-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default" style="margin-top: 20px;">
+                    <div class="panel-body">
+                        <table id="job-list" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>任務名稱</th>
+                                <th>Shell命令</th>
+                                <th>cron表達式</th>
+                                <th>任務操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="job-name">job1</td>
+                                    <td class="job-command">echo hello</td>
+                                    <td class="job-cronExpr">* * * * * * *</td>
+                                    <td>
+                                        <div class="btn-toolbar">
+                                            <button class="btn btn-info edit-job">編輯</button>
+                                            <button class="btn btn-danger delete-job">刪除</button>
+                                            <button class="btn btn-warning kill-job">砍掉當前正在執行Job</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#job-list").on("click",".edit-job",function (event) {
+                console.log("編輯按鈕")
+            })
+            $("#job-list").on("click",".delete-job",function (event) {
+                console.log("刪除按鈕")
+            })
+            $("#job-list").on("click",".kill-job",function (event) {
+                console.log("砍Job按鈕")
+            })
+
+            function rebuildJobList() {
+                $.ajax({
+                    url:'/jobs/list',
+                    dataType:'json',
+                    success:function (resp) {
+                        if(resp.error!=null){
+                            return
+                        }
+                        console.log("success")
+
+                        var jobList = resp.data
+                        console.log(jobList.length)
+                        $('#job-list tbody').empty()
+                        for(var i=0;i<jobList.length;++i){
+                            var job = jobList[i];
+                            var tr = $("<tr>")
+                            tr.append($('<td class="job-name">').html(job.name))
+                            tr.append($('<td class="job-command">').html(job.command))
+                            tr.append($('<td class="job-cronExpr">').html(job.cronExpr ))
+                            var toolbar = $('<div class="btn-toolbar">')
+                                .append('<button class="btn btn-info edit-job">編輯</button>')
+                                .append('<button class="btn btn-danger delete-job">刪除</button>')
+                                .append('<button class="btn btn-warning kill-job">砍掉當前正在執行Job</button>')
+                            tr.append($('<td>').append(toolbar))
+                            $('#job-list').append(tr)
+
+                        }
+                    }
+                })
+            }
+
+            rebuildJobList()
+        })
+    </script>
+</body>
+</html>

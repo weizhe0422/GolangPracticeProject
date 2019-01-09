@@ -7,11 +7,12 @@ import (
 )
 
 type Config struct {
-	ApiSvrPrt          int `json:"apiSvrPrt"`
-	ApiSvrReadTimeOut  int `json:"apiSvrReadTimeOut"`
-	ApiSvrWriteTimeOut int `json:"apiSvrWriteTimeOut"`
-	EtcdEndPoints []string`json:"etcdEndPoints"`
-	EtcdDDialTimeOut int `json:"etcdDDialTimeOut"`
+	ApiSvrPrt          int      `json:"apiSvrPrt"`
+	ApiSvrReadTimeOut  int      `json:"apiSvrReadTimeOut"`
+	ApiSvrWriteTimeOut int      `json:"apiSvrWriteTimeOut"`
+	EtcdEndPoints      []string `json:"etcdEndPoints"`
+	EtcdDDialTimeOut   int      `json:"etcdDDialTimeOut"`
+	WebRoot            string   `json:"webRoot"`
 }
 
 var (

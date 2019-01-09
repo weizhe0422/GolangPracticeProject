@@ -3,5 +3,6 @@
   "apiSvrReadTimeOut":5000,
   "apiSvrWriteTimeOut":5000,
   "etcdEndPoints":["localhost:2379"],
-  "etcdDDialTimeOut":5000
+  "etcdDDialTimeOut":5000,
+  "webRoot": "./webroot"
 }
