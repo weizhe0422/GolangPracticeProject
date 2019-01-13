@@ -1,0 +1,4 @@
+{
+  "etcdEndPoints":["localhost:2379"],
+  "etcdDDialTimeOut":5000
+}

@@ -21,7 +21,7 @@
         <!--功能按鈕-->
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary">新建任務</button>
+                <button type="button" class="btn btn-primary" id="new-job">新建任務</button>
             </div>
         </div>
 
@@ -46,9 +46,9 @@
                                     <td class="job-cronExpr">* * * * * * *</td>
                                     <td>
                                         <div class="btn-toolbar">
-                                            <button class="btn btn-info edit-job">編輯</button>
+                                            <button class="btn btn-info edit-job" data-toggle="modal" data-target="#exampleModalCenter">編輯</button>
                                             <button class="btn btn-danger delete-job">刪除</button>
-                                            <button class="btn btn-warning kill-job">砍掉當前正在執行Job</button>
+                                            <button class="btn btn-warning kill-job">砍掉正在執行Job</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -59,16 +59,96 @@
             </div>
         </div>
     </div>
+
+    <div id="edit-modal" class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">編輯任務</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="edit-name">任務名稱</label>
+                            <input type="text" class="form-control" id="edit-name" placeholder="任務名稱">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-name">shell命令</label>
+                            <input type="text" class="form-control" id="edit-command" placeholder="shell命令">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-name">cron表達式</label>
+                            <input type="text" class="form-control" id="edit-cronExpr" placeholder="cron表達式">
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="save-job">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <script>
         $(document).ready(function () {
             $("#job-list").on("click",".edit-job",function (event) {
-                console.log("編輯按鈕")
+                $('#edit-name').val($(this).parents('tr').children('.job-name').text())
+                $('#edit-command').val($(this).parents('tr').children('.job-command').text())
+                $('#edit-cronExpr').val($(this).parents('tr').children('.job-cronExpr').text())
+
+                $('#edit-modal').modal('show')
             })
             $("#job-list").on("click",".delete-job",function (event) {
-                console.log("刪除按鈕")
+                var jobName = $(this).parents("tr").children(".job-name").text()
+                $.ajax({
+                    url:'/jobs/delete',
+                    type:'post',
+                    dataType:'json',
+                    data:{name:jobName},
+                    complete:function () {
+                        window.location.reload()
+                    }
+                })
             })
             $("#job-list").on("click",".kill-job",function (event) {
-                console.log("砍Job按鈕")
+                var jobName = $(this).parents("tr").children(".job-name").text()
+                $.ajax({
+                    url:'/jobs/kill',
+                    type:'post',
+                    dataType:'json',
+                    data:{name:jobName},
+                    complete:function () {
+                        window.location.reload()
+                    }
+                })
+            })
+            $('#save-job').on('click',function () {
+                var jobInfo = {name:$('#edit-name').val(),command:$('#edit-command').val(),cronExpr:$('#edit-cronExpr').val()}
+                $.ajax({
+                    url:'/jobs/save',
+                    type:'post',
+                    dataType:'json',
+                    data:{job:JSON.stringify(jobInfo)},
+                    complete:function () {
+                        window.location.reload()
+                    }
+                })
+            })
+            $('#new-job').on('click',function () {
+                $('#edit-name').val('')
+                $('#edit-command').val('')
+                $('#edit-cronExpr').val('')
+                $('#edit-modal').modal('show')
+
             })
 
             function rebuildJobList() {
